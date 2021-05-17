@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/frame_detail_menu"
     tools:context=".DetailMenuFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -41,12 +43,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="330dp"
                 app:cardCornerRadius="10dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
+                    android:id="@+id/imageMenu"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
@@ -57,13 +60,39 @@
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
+                android:id="@+id/harga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:text="Rp. 50.000"
+                android:textColor="@color/colorPrimaryVariant"
+                android:textSize="18dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ketersediaan" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/ketersediaan"
+                app:chipStrokeColor="@color/colorPrimaryVariant"
+                app:chipStrokeWidth="1.5dp"
+                app:chipBackgroundColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:textColor="@color/black"
+                android:text="Tersedia"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image" />
+
+            <TextView
                 android:id="@+id/nama_menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
                 android:text="Beef Short Plate"
                 android:textColor="@color/black"
-                android:layout_marginTop="5dp"
-                android:textSize="36dp"
+                android:textSize="32dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/harga" />
@@ -74,30 +103,50 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="5"
-                android:textSize="16dp"
                 android:text="Potongan daging sapi dari bagian otot perut, bentuknya panjang dan datar"
+                android:textSize="14dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/nama_menu" />
 
-            <TextView
-                android:id="@+id/harga"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Rp. 50.000"
-                android:textColor="@color/colorPrimary"
-                android:layout_marginTop="24dp"
-                android:textSize="18dp"
-                android:textStyle="bold"
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="160dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="96dp"
+                android:background="@android:color/transparent"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxStrokeColor="@android:color/transparent"
+                app:endIconMode="clear_text"
+                app:hintTextColor="@android:color/primary_text_light"
+                app:layout_constraintBottom_toTopOf="@+id/btnTambahPesanan"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image" />
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/jumlah_pesanan"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="numberSigned"
+                    android:hint="Jumlah Pesanan"
+                    android:ellipsize="start"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:padding="5dp"
+                    android:textCursorDrawable="@null" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTambahPesanan"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="24dp"
                 android:backgroundTint="@color/colorPrimary"
                 android:text="Tambah Pesanan"
                 android:textColorHint="#ffff"

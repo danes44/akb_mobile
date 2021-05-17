@@ -2,11 +2,11 @@ package com.frumentiusdaneswara.akb.Models;
 
 public class MenuModel {
     private String  nama_menu, deskripsi, unit, tipe_menu, str_gambar;
-    private int id_menu;
+    private int id_menu, ketersediaan;
     private double harga;
-    private boolean ketersediaan;
+//    private boolean ketersediaan;
 
-    public MenuModel(int id_menu, String nama_menu, String deskripsi, String unit, String tipe_menu, String str_gambar, double harga, boolean ketersediaan) {
+    public MenuModel(int id_menu, String nama_menu, String deskripsi, String unit, String tipe_menu, String str_gambar, double harga, int ketersediaan) {
         this.nama_menu = nama_menu;
         this.deskripsi = deskripsi;
         this.unit = unit;
@@ -45,7 +45,7 @@ public class MenuModel {
         return harga;
     }
 
-    public boolean isKetersediaan() {
+    public int getKetersediaan() {
         return ketersediaan;
     }
 }

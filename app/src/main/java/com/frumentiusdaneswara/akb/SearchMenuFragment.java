@@ -1,6 +1,9 @@
 package com.frumentiusdaneswara.akb;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -24,6 +27,7 @@ import com.android.volley.toolbox.Volley;
 import com.frumentiusdaneswara.akb.API.MenuAPI;
 import com.frumentiusdaneswara.akb.Adapters.AdapterMenu;
 import com.frumentiusdaneswara.akb.Models.MenuModel;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONArray;
@@ -66,10 +70,23 @@ public class SearchMenuFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         searchInputText = view.findViewById(R.id.search_menu);
+
+        loadPreferences();
+
+        MaterialToolbar materialToolbar = (MaterialToolbar) view.findViewById(R.id.profileToolbar);
+        materialToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //nanti disini balik ke home
+                getActivity().onBackPressed();
+            }
+        });
+
         searchInputText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                adapter.getFilter().filter(s);
+                System.out.println("MASUK SINI LHOOOOO ASDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
             }
 
             @Override
@@ -79,7 +96,7 @@ public class SearchMenuFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                adapter.getFilter().filter(s);
             }
         });
         swipeRefresh = view.findViewById(R.id.swipeRefresh);
@@ -126,7 +143,7 @@ public class SearchMenuFragment extends Fragment {
                         String nama_menu = jsonObject.optString("nama_menu");
                         Double harga = jsonObject.optDouble("harga");
                         String str_gambar = MenuAPI.ROOT_URL+jsonObject.optString("str_gambar");
-                        Boolean ketersediaan = jsonObject.optBoolean("ketersediaan");
+                        Integer ketersediaan = jsonObject.optInt("ketersediaan");
                         String deskripsi = jsonObject.optString("deskripsi");
                         String unit = jsonObject.optString("unit");
 
@@ -150,5 +167,20 @@ public class SearchMenuFragment extends Fragment {
         });
 
         queue.add(stringRequest);
+    }
+
+    private void loadPreferences() {
+        SharedPreferences preferences = this.getActivity().getSharedPreferences("myKey", Context.MODE_PRIVATE);
+        String kategori = preferences.getString("searchKategori","-");
+        if (kategori.equals("utama")){
+            searchInputText.setText("utama");
+        }
+        else if (kategori.equals("sideDish")){
+            searchInputText.setText("side dish");
+        }
+        else if (kategori.equals("minuman")){
+            searchInputText.setText("minuman");
+        }
+
     }
 }

@@ -7,13 +7,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,65 +17,57 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.frumentiusdaneswara.akb.DetailMenuFragment;
+import com.frumentiusdaneswara.akb.Models.DetailOrderModel;
 import com.frumentiusdaneswara.akb.Models.MenuModel;
 import com.frumentiusdaneswara.akb.R;
 import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.android.volley.Request.Method.DELETE;
+public class AdapterDetailOrder extends RecyclerView.Adapter<AdapterDetailOrder.adapterUserViewHolder>{
 
-public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.adapterUserViewHolder> {
-
-    private List<MenuModel> menuList;
-    private List<MenuModel> menuListFiltered;
+    private List<DetailOrderModel> detailOrderList;
+    private List<DetailOrderModel> detailOrderListFiltered;
     private Context context;
     private View view;
     private String userInput;
 
-    public AdapterMenu(Context context, List<MenuModel> menuList) {
-        this.context                = context;
-        this.menuList               = menuList;
-        this.menuListFiltered       = menuList;
+    public AdapterDetailOrder(Context context, List<DetailOrderModel> detailOrderList) {
+        this.context                    = context;
+        this.detailOrderList            = detailOrderList;
+        this.detailOrderListFiltered    = detailOrderList;
     }
 
     @NonNull
     @Override
-    public AdapterMenu.adapterUserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AdapterDetailOrder.adapterUserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        view = layoutInflater.inflate(R.layout.activity_adapter_menu, parent, false);
-        return new AdapterMenu.adapterUserViewHolder(view);
+        view = layoutInflater.inflate(R.layout.activity_adapter_detail_order, parent, false);
+        return new AdapterDetailOrder.adapterUserViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AdapterMenu.adapterUserViewHolder holder, int position) {
-        final MenuModel menuModel = menuListFiltered.get(position);
+    public void onBindViewHolder(@NonNull AdapterDetailOrder.adapterUserViewHolder holder, int position) {
+        final DetailOrderModel detailOrderModel = detailOrderListFiltered.get(position);
         NumberFormat formatter = new DecimalFormat("#,###");
 
-        holder.txtNamaMenu.setText(menuModel.getNama_menu());
-        holder.txtHarga.setText("Rp. " + formatter.format((int) Math.round(menuModel.getHarga())));
-        holder.txtDeskripsi.setText(menuModel.getDeskripsi());
+        holder.txtNamaMenu.setText(detailOrderModel.getNama_menu());
+        System.out.println(detailOrderModel.getJumlah_order());
+//        holder.txtHarga.setText(detailOrderModel.getJumlah_order()+" @ "+"Rp. "
+//                        +formatter.format((int) Math.round(detailOrderModel.getHarga())));
+        holder.txtHarga.setText(formatter.format((int) Math.round(detailOrderModel.getHarga_jumlah())));
+        holder.txtDeskripsi.setText(detailOrderModel.getDeskripsi());
         Glide.with(context)
                 .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .load(menuModel.getStr_gambar())
+                .load(detailOrderModel.getStr_gambar())
                 .centerCrop()
                 .override(300, 300)
                 .placeholder(R.drawable.dummy)
@@ -95,14 +82,14 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.adapterUserVie
 //                dialog.show(manager, "dialog");
 //
 //                Gson gson = new Gson();
-//                String requestItemJson = gson.toJson(menuModel);
+//                String requestItemJson = gson.toJson(detailOrderModel);
 //
 //                Bundle args = new Bundle();
 //                args.putString("item", requestItemJson);
 //                dialog.setArguments(args);
                 DetailMenuFragment fragment = new DetailMenuFragment();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("item", new Gson().toJson(menuModel));
+                bundle.putSerializable("item", new Gson().toJson(detailOrderModel));
                 fragment.setArguments(bundle);
                 loadFragment(fragment);
             }
@@ -111,7 +98,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.adapterUserVie
 
     @Override
     public int getItemCount() {
-        return (menuListFiltered != null) ? menuListFiltered.size() : 0;
+        return (detailOrderListFiltered != null) ? detailOrderListFiltered.size() : 0;
     }
 
     public class adapterUserViewHolder extends RecyclerView.ViewHolder {
@@ -136,24 +123,24 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.adapterUserVie
                 userInput = charSequence.toString().toLowerCase();
 //                loadPreferences();
                 if (userInput.isEmpty()) {
-                    menuListFiltered = menuList;
+                    detailOrderListFiltered = detailOrderList;
                 }
                 else {
-                    List<MenuModel> filteredList = new ArrayList<>();
-                    for(MenuModel menuModel : menuList) {
-                        if(menuModel.getNama_menu().toLowerCase().contains(userInput) || menuModel.getTipe_menu().toLowerCase().contains(userInput)) {
-                            filteredList.add(menuModel);
+                    List<DetailOrderModel> filteredList = new ArrayList<>();
+                    for(DetailOrderModel detailOrderModel : detailOrderList) {
+                        if(detailOrderModel.getNama_menu().toLowerCase().contains(userInput) || detailOrderModel.getTipe_menu().toLowerCase().contains(userInput)) {
+                            filteredList.add(detailOrderModel);
                         }
                     }
-                    menuListFiltered = filteredList;
+                    detailOrderListFiltered = filteredList;
                 }
                 FilterResults filterResults = new FilterResults();
-                filterResults.values = menuListFiltered;
+                filterResults.values = detailOrderListFiltered;
                 return filterResults;
             }
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                menuListFiltered = (ArrayList<MenuModel>) filterResults.values;
+                detailOrderListFiltered = (ArrayList<DetailOrderModel>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
